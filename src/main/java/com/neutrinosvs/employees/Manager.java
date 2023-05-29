@@ -3,7 +3,7 @@ package com.neutrinosvs.employees;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Manager extends Employee {
+public class Manager extends Employee implements IEmployee {
     private int orgSize = 0;
     private int directReports = 0;
     private final String mgrRegex = "\\w+=(?<orgSize>\\w+),\\w+=(?<dr>\\w+)";

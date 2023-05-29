@@ -32,7 +32,7 @@ public abstract class Employee {
         }
     }
 
-    public static final Employee createEmployee(String employeeText) {
+    public static final IEmployee createEmployee(String employeeText) {
         Matcher peopleMat = Employee.PEOPLE_PAT.matcher(employeeText);
         if (peopleMat.find()) {
             return switch (peopleMat.group("role")) {
@@ -40,15 +40,10 @@ public abstract class Employee {
                 case "Manager" -> new Manager(employeeText);
                 case "Analyst" -> new Analyst(employeeText);
                 case "CEO" -> new CEO(employeeText);
-                default -> new Employee() {
-                    @Override
-                    public int getSalary() {
-                        return 0;
-                    }
-                };
+                default -> () -> 0;
             };
         } else {
-            return  new DummyEmployee();
+            return () -> 0;
         }
     }
 
@@ -70,7 +65,8 @@ public abstract class Employee {
         }
     }
 
-    public record Jumper(String firstName, String lastName){}
+    public record Jumper(String firstName, String lastName) {
+    }
 
 //    private final class MyInnerClass {
 //        public  int getStuff() {
