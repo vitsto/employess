@@ -37,8 +37,16 @@ public class Main {
             employees.add(employee);
         }
 
-        List<String> undesirables = List.of("Wilma5", "Barney4", "Fred2");
-        removeUndesirables(employees, undesirables);
+        employees.sort((o1, o2) -> {
+            if (o1 instanceof Employee emp1 && o2 instanceof Employee emp2) {
+                int lnameResult = emp2.lastName.compareTo(emp1.lastName);
+                return lnameResult != 0 ? lnameResult : Integer.compare(emp1.getSalary(), (emp2.getSalary()));
+            }
+            return 0;
+        });
+
+//        List<String> undesirables = List.of("Wilma5", "Barney4", "Fred2");
+//        removeUndesirables(employees, undesirables);
 
         for (IEmployee worker : employees) {
            System.out.println(worker);
@@ -48,10 +56,10 @@ public class Main {
         NumberFormat currencyInstance = NumberFormat.getCurrencyInstance();
         System.out.printf("The total payout should be %s%n", currencyInstance.format(totalSalaries));
 
-        Weirdo larry = new Weirdo("David", "Larry", LocalDate.of(1950, 1, 1));
-        Weirdo betterWeirdo = new Weirdo(larry.lastName() + "ZZZ", "Larry", LocalDate.of(1950, 1, 1));
-        Apple jake = new Weirdo("Snake", "Jake");
-        System.out.println(larry.firstName());
+//        Weirdo larry = new Weirdo("David", "Larry", LocalDate.of(1950, 1, 1));
+//        Weirdo betterWeirdo = new Weirdo(larry.lastName() + "ZZZ", "Larry", LocalDate.of(1950, 1, 1));
+//        Apple jake = new Weirdo("Snake", "Jake");
+//        System.out.println(larry.firstName());
 //        jake.sayHello();
     }
 

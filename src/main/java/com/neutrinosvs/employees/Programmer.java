@@ -1,5 +1,6 @@
 package com.neutrinosvs.employees;
 
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -49,4 +50,16 @@ public class Programmer extends Employee implements IEmployee, Apple, Chef {
         return 3000 + linesOfCode * yearsOfEx * iq;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Programmer that)) return false;
+        if (!super.equals(o)) return false;
+        return iq == that.iq;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), iq);
+    }
 }
