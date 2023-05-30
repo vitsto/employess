@@ -2,9 +2,7 @@ package com.neutrinosvs.employees;
 
 import java.text.NumberFormat;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Matcher;
 
 public class Main {
@@ -39,17 +37,10 @@ public class Main {
             employees.add(employee);
         }
 
-        List<String> removalNames = new ArrayList<>();
-        removalNames.add("Wilma5");
-        removalNames.add("Barney4");
-        removalNames.add("Fred2");
+        List<String> undesirables = List.of("Wilma5", "Barney4", "Fred2");
+        removeUndesirables(employees, undesirables);
 
-       for (IEmployee worker : employees) {
-           if (worker instanceof Employee tmpWorker) {
-               if (removalNames.contains(tmpWorker.firstName)) {
-                   employees.remove(worker);
-               }
-           }
+        for (IEmployee worker : employees) {
            System.out.println(worker);
            totalSalaries += worker.getSalary();
        }
@@ -62,5 +53,16 @@ public class Main {
         Apple jake = new Weirdo("Snake", "Jake");
         System.out.println(larry.firstName());
 //        jake.sayHello();
+    }
+
+    private static void removeUndesirables(List<IEmployee> employees, List<String> removalNames) {
+        for (Iterator<IEmployee> iterator = employees.iterator(); iterator.hasNext(); ) {
+            IEmployee worker = iterator.next();
+            if (worker instanceof Employee tmpWorker) {
+                if (removalNames.contains(tmpWorker.firstName)) {
+                    iterator.remove();
+                }
+            }
+        }
     }
 }
