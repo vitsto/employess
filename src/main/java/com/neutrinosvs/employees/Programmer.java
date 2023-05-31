@@ -4,7 +4,7 @@ import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Programmer extends Employee implements IEmployee, Apple, Chef {
+public class Programmer extends Employee implements Apple, Chef {
     private int linesOfCode = 0;
     private int yearsOfEx = 0;
     private int iq = 0;

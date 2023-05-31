@@ -3,7 +3,7 @@ package com.neutrinosvs.employees;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class CEO extends Employee implements IEmployee, Apple, Flyer {
+public class CEO extends Employee implements Apple, Flyer {
     private int avgStockPrice = 0;
     private Flyer flyer = new Pilot(1000, true);
     private final String ceoRegex = "\\w+=(?<avgStockPrice>\\w+)";

@@ -3,7 +3,7 @@ package com.neutrinosvs.employees;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Analyst extends Employee implements IEmployee {
+public class Analyst extends Employee  {
     private int projectCount = 0;
     private final String analystRegex = "\\w+=(?<projectCount>\\w+)";
     private final Pattern analystPat = Pattern.compile(analystRegex);

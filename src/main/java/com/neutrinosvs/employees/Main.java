@@ -1,13 +1,17 @@
 package com.neutrinosvs.employees;
 
 import java.text.NumberFormat;
-import java.time.LocalDate;
 import java.util.*;
 import java.util.regex.Matcher;
 
 public class Main {
     public static void main(String[] args) {
         String peopleText = """
+                Flinstone, Fred, 1/1/1900, Programmer, {locpd=2000,yoe=10,iq=140}
+                Flinstone, Fred, 1/1/1900, Programmer, {locpd=2000,yoe=10,iq=140}
+                Flinstone, Fred, 1/1/1900, Programmer, {locpd=2000,yoe=10,iq=140}
+                Flinstone, Fred, 1/1/1900, Programmer, {locpd=2000,yoe=10,iq=140}
+                Flinstone, Fred, 1/1/1900, Programmer, {locpd=2000,yoe=10,iq=140}
                 Flinstone, Fred, 1/1/1900, Programmer, {locpd=2000,yoe=10,iq=140}
                 Flinstone, Fred, 1/1/1900, Programmerzzzz, {locpd=2000,yoe=10,iq=140}
                 Flinstone2, Fred2, 1/1/1900, Programmer, {locpd=1300,yoe=14,iq=100}
@@ -31,36 +35,20 @@ public class Main {
 
         int totalSalaries = 0;
         IEmployee employee;
-        List<IEmployee> employees = new LinkedList<>();
+        Set<IEmployee> employees = new HashSet<>();
         while (peopleMat.find()) {
             employee = Employee.createEmployee(peopleMat.group());
             employees.add(employee);
         }
 
-        employees.sort((o1, o2) -> {
-            if (o1 instanceof Employee emp1 && o2 instanceof Employee emp2) {
-                int lnameResult = emp2.lastName.compareTo(emp1.lastName);
-                return lnameResult != 0 ? lnameResult : Integer.compare(emp1.getSalary(), (emp2.getSalary()));
-            }
-            return 0;
-        });
-
-//        List<String> undesirables = List.of("Wilma5", "Barney4", "Fred2");
-//        removeUndesirables(employees, undesirables);
-
         for (IEmployee worker : employees) {
-           System.out.println(worker);
-           totalSalaries += worker.getSalary();
-       }
+            System.out.println(worker);
+            totalSalaries += worker.getSalary();
+        }
 
         NumberFormat currencyInstance = NumberFormat.getCurrencyInstance();
         System.out.printf("The total payout should be %s%n", currencyInstance.format(totalSalaries));
-
-//        Weirdo larry = new Weirdo("David", "Larry", LocalDate.of(1950, 1, 1));
-//        Weirdo betterWeirdo = new Weirdo(larry.lastName() + "ZZZ", "Larry", LocalDate.of(1950, 1, 1));
-//        Apple jake = new Weirdo("Snake", "Jake");
-//        System.out.println(larry.firstName());
-//        jake.sayHello();
+        System.out.println(employees.size());
     }
 
     private static void removeUndesirables(List<IEmployee> employees, List<String> removalNames) {

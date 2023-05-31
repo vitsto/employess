@@ -7,7 +7,7 @@ import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public abstract class Employee {
+public abstract class Employee implements IEmployee {
     protected final DateTimeFormatter dtFormatter = DateTimeFormatter.ofPattern("M/d/yyyy");
     protected final NumberFormat moneyFormat = NumberFormat.getCurrencyInstance();
     private static final String PEOPLE_REGEX = "(?<lastName>\\w+),\\s*(?<firstName>\\w+),\\s*(?<dob>\\d{1,2}/\\d{1,2}/\\d{4}),\\s*(?<role>\\w+)(?:,\\s*\\{(?<details>.*)\\})?\\n";
@@ -41,10 +41,10 @@ public abstract class Employee {
                 case "Manager" -> new Manager(employeeText);
                 case "Analyst" -> new Analyst(employeeText);
                 case "CEO" -> new CEO(employeeText);
-                default -> () -> 0;
+                default -> new DummyEmployee();
             };
         } else {
-            return () -> 0;
+            return new DummyEmployee();
         }
     }
 
@@ -71,11 +71,17 @@ public abstract class Employee {
         return Objects.hash(lastName, firstName, dob);
     }
 
-    private static final class DummyEmployee extends Employee {
+    private static final class DummyEmployee extends Employee{
         @Override
         public int getSalary() {
             return 0;
         }
+    }
+
+    @Override
+    public int compareTo(IEmployee o) {
+        Employee other = (Employee) o;
+        return this.lastName.compareTo(other.lastName);
     }
 
     public record Jumper(String firstName, String lastName) {
