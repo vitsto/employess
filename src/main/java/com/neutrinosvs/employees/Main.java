@@ -35,7 +35,11 @@ public class Main {
 
         int totalSalaries = 0;
         IEmployee employee;
-        Set<IEmployee> employees = new HashSet<>();
+        Set<IEmployee> employees = new TreeSet<>((o1, o2) -> {
+            Employee emp1 = (Employee) o1;
+            Employee emp2 = (Employee) o2;
+            return emp1.firstName.compareTo(emp2.firstName);
+        });
         while (peopleMat.find()) {
             employee = Employee.createEmployee(peopleMat.group());
             employees.add(employee);
