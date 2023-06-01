@@ -5,6 +5,10 @@ import java.util.*;
 import java.util.regex.Matcher;
 
 public class Main {
+
+    private static Set<IEmployee> employees;
+    private static Map<String, Employee> empMap;
+
     public static void main(String[] args) {
         String peopleText = """
                 Flinstone, Fred, 1/1/1900, Programmer, {locpd=2000,yoe=10,iq=140}
@@ -35,14 +39,17 @@ public class Main {
 
         int totalSalaries = 0;
         IEmployee employee;
-        Set<IEmployee> employees = new TreeSet<>((o1, o2) -> {
+        employees = new TreeSet<>((o1, o2) -> {
             Employee emp1 = (Employee) o1;
             Employee emp2 = (Employee) o2;
             return emp1.firstName.compareTo(emp2.firstName);
         });
+        empMap = new TreeMap<>();
         while (peopleMat.find()) {
             employee = Employee.createEmployee(peopleMat.group());
-            employees.add(employee);
+            Employee emp = (Employee)employee;
+            boolean add = employees.add(employee);
+            empMap.put(emp.firstName, emp);
         }
 
         for (IEmployee worker : employees) {
@@ -53,6 +60,7 @@ public class Main {
         NumberFormat currencyInstance = NumberFormat.getCurrencyInstance();
         System.out.printf("The total payout should be %s%n", currencyInstance.format(totalSalaries));
         System.out.println(employees.size());
+        System.out.println(empMap);
     }
 
     private static void removeUndesirables(List<IEmployee> employees, List<String> removalNames) {
@@ -64,5 +72,16 @@ public class Main {
                 }
             }
         }
+    }
+
+    public int getSalary(String firstName) {
+        // плохой подход
+//        for (IEmployee employee : employees) {
+//            Employee emp = (Employee) employee;
+//            if (firstName.equals(emp.firstName)) {
+//                return emp.getSalary();
+//            }
+//        }
+        return empMap.get(firstName).getSalary();
     }
 }
