@@ -60,7 +60,12 @@ public class Main {
         NumberFormat currencyInstance = NumberFormat.getCurrencyInstance();
         System.out.printf("The total payout should be %s%n", currencyInstance.format(totalSalaries));
         System.out.println(employees.size());
-        System.out.println(empMap);
+        System.out.println(empMap.size());
+//        for (Map.Entry<String, Employee> entry : empMap.entrySet()) {
+//            System.out.printf("Key = %s, Value = %s%n", entry.getKey(), entry.getValue());
+//        }
+
+
     }
 
     private static void removeUndesirables(List<IEmployee> employees, List<String> removalNames) {
@@ -82,6 +87,11 @@ public class Main {
 //                return emp.getSalary();
 //            }
 //        }
-        return empMap.get(firstName).getSalary();
+        return empMap.getOrDefault(firstName, new Employee() {
+            @Override
+            public int getSalary() {
+                return 0;
+            }
+        }).getSalary();
     }
 }
