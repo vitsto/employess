@@ -1,13 +1,9 @@
 package com.neutrinosvs.employees;
 
-import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
-public class StreamsStuff {
+public class Experiments {
     public static void main(String[] args) {
         String peopleText = """
                 Flinstone, Fred, 1/1/1900, Programmer, {locpd=2000,yoe=10,iq=140}
@@ -34,13 +30,44 @@ public class StreamsStuff {
                 Rubble, Betty, 4/4/1915, CEO, {avgStockPrice=300}
                 """;
 
-        peopleText.lines()
-            .map(Employee::createEmployee)
-            .forEach(System.out::println);
+//        peopleText.lines()
+//            .map(s -> Employee.createEmployee(s))
+//            .forEach(System.out::println);
+
+//        stringList.stream().sorted(Comparator.naturalOrder()).forEach(System.out::print);
+
+        List<String> stringList = new LinkedList<>(List.of("cc", "ddd", "bb", "cc", "aaaa"));
+        //stateful
+//        stringList.stream().sorted((o1, o2) -> {
+//            System.out.println("1 stage: " + o1 + " " + o2 + ";");
+//            return o1.compareTo(o2);
+//        }).forEach(s -> {
+//            System.out.println("2 stage:" + s);
+//        });
+
+        //stateless
+//        stringList.stream().map(s -> {
+//            System.out.println("1 stage:" + s);
+//            return s.length();
+//        }).forEach(s -> {
+//            System.out.println("2 stage:" + s);
+//        });
+
+        stringList
+                .stream()
+                .map(e -> {
+                    System.out.println("Map");
+                    return e.toUpperCase();
+                })
+                .filter(e -> {
+                    System.out.println("Filter");
+                    return e.length() > 2;
+                })
+                .sorted()
+                .forEach(s -> {
+                    System.out.println("forEach");
+                });
 
 
-        List<String> stringList = new LinkedList<>(List.of("cb", "daa", "b", "c", "a"));
-        List<String> collect = stringList.stream().sorted(Comparator.naturalOrder()).collect(Collectors.toList());
-        System.out.println(collect);
     }
 }
