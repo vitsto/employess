@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -55,13 +56,14 @@ public class StreamStuff {
                 .sum();
         System.out.println(totalSalary);
 
-        System.out.println("--------------");
+        System.out.println("-------------- additional techniques");
 
         //additional techniques
         Predicate<String> dummyEmployeeSelector = s -> s.contains("Programmerzzzz");
-        Predicate<Employee> employeePredicate = employee -> "N/A".equals(employee.getLastName());
+//        Predicate<Employee> dummySelector = employee -> "N/A".equals(employee.getLastName()); // "N/A" is first to defend from NPE
+        Predicate<Employee> dummySelector = employee -> employee.getLastName().equals("N/A"); // "N/A" is first to defend from NPE
         Predicate<Employee> overFiveKSelector = e -> e.getSalary() > 5000;
-        Predicate<Employee> noDummiesAndOverFiveK = employeePredicate.negate().and(overFiveKSelector);
+        Predicate<Employee> noDummiesAndOverFiveK = dummySelector.negate().and(overFiveKSelector);
         int sum = peopleText.lines()
 //                .filter(dummyEmployeeSelector.negate())
                 .map(Employee::createEmployee)
@@ -75,6 +77,34 @@ public class StreamStuff {
                 .mapToInt(StreamStuff::showEmpAndGetSalary)
                 .sum();
         System.out.println(totalSalary);
+
+        System.out.println("\n-------------- Flattening  streams of streams");
+        peopleText.lines()
+                .map(Employee::createEmployee)
+                .map(e -> (Employee) e)
+                .map(Employee::getFirstName)
+                .map(firstName -> firstName.split(""))
+                .flatMap(Arrays::stream)
+                .map(String::toLowerCase)
+                .distinct()
+                .forEach(System.out::print);
+
+        //alternatives to filter
+        System.out.println("-------------- Alternatives to filter");
+        boolean allOver3K = peopleText.lines()
+                .map(Employee::createEmployee)
+                .map(e -> (Employee) e)
+                .filter(dummySelector.negate())
+                .noneMatch(e -> e.getSalary() < 0); //anyMatch, allMatch
+        System.out.println(allOver3K);
+
+        Optional<Employee> optionalEmployee = peopleText.lines()
+                .map(Employee::createEmployee)
+                .map(e -> (Employee) e)
+                .filter(dummySelector.negate())
+                .findFirst(); //findAny
+
+        System.out.println(optionalEmployee.map(Employee::getFirstName).orElse("not found"));
 
 //        Extra materials
 
