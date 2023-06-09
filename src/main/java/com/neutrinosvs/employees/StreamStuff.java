@@ -106,6 +106,27 @@ public class StreamStuff {
 
         System.out.println(optionalEmployee.map(Employee::getFirstName).orElse("not found"));
 
+        //the map reduce pattern
+        long result = peopleText.lines()
+//                .filter(dummyEmployeeSelector.negate())
+                .map(Employee::createEmployee)
+                .map(e -> (Employee) e)
+                .filter(noDummiesAndOverFiveK)
+                .collect(Collectors.toSet())
+                .stream()
+                .sorted(comparing(Employee::getLastName)
+                        .thenComparing(Employee::getFirstName)
+                        .thenComparing(Employee::getSalary))
+                .skip(5)
+                .mapToInt(StreamStuff::showEmpAndGetSalary)
+                .reduce( (a, b) -> a < b ? a : b).orElse(-1);
+        System.out.println(result);
+
+        Optional<String> reduce = Stream.of("tom")
+                .reduce((a, b) -> a.toUpperCase().concat("_").concat(b.toUpperCase()));
+        System.out.println(reduce.orElse(""));
+
+
 //        Extra materials
 
 //        Collection<String> nums = Set.of("one", "two", "three", "four");
