@@ -107,7 +107,37 @@ public class StreamStuff {
         System.out.println(optionalEmployee.map(Employee::getFirstName).orElse("not found"));
 
         //the map reduce pattern
-        long result = peopleText.lines()
+        System.out.println("--------------------The map reduce pattern");
+
+        OptionalDouble resultAverage = peopleText.lines()
+                .map(Employee::createEmployee)
+                .map(e -> (Employee) e)
+                .filter(noDummiesAndOverFiveK)
+                .collect(Collectors.toSet())
+                .stream()
+                .sorted(comparing(Employee::getLastName)
+                        .thenComparing(Employee::getFirstName)
+                        .thenComparing(Employee::getSalary))
+                .skip(5)
+                .mapToInt(StreamStuff::showEmpAndGetSalary)
+                .average();
+        System.out.println(resultAverage.orElse(0));
+
+        OptionalInt resultMax = peopleText.lines()
+                .map(Employee::createEmployee)
+                .map(e -> (Employee) e)
+                .filter(noDummiesAndOverFiveK)
+                .collect(Collectors.toSet())
+                .stream()
+                .sorted(comparing(Employee::getLastName)
+                        .thenComparing(Employee::getFirstName)
+                        .thenComparing(Employee::getSalary))
+                .skip(5)
+                .mapToInt(StreamStuff::showEmpAndGetSalary)
+                .max();
+        System.out.println(resultMax.orElse(0));
+
+        long resultSumWithReduce = peopleText.lines()
 //                .filter(dummyEmployeeSelector.negate())
                 .map(Employee::createEmployee)
                 .map(e -> (Employee) e)
@@ -119,13 +149,46 @@ public class StreamStuff {
                         .thenComparing(Employee::getSalary))
                 .skip(5)
                 .mapToInt(StreamStuff::showEmpAndGetSalary)
-                .reduce( (a, b) -> a < b ? a : b).orElse(-1);
-        System.out.println(result);
+                .reduce(0, (a, b) -> a + b);
+        System.out.println(resultSumWithReduce);
 
-        Optional<String> reduce = Stream.of("tom")
+        long resultMaxWithReduce = peopleText.lines()
+//                .filter(dummyEmployeeSelector.negate())
+                .map(Employee::createEmployee)
+                .map(e -> (Employee) e)
+                .filter(noDummiesAndOverFiveK)
+                .collect(Collectors.toSet())
+                .stream()
+                .sorted(comparing(Employee::getLastName)
+                        .thenComparing(Employee::getFirstName)
+                        .thenComparing(Employee::getSalary))
+                .skip(5)
+                .mapToInt(StreamStuff::showEmpAndGetSalary)
+                .reduce(0, (a, b) -> a > b ? a : b);
+        System.out.println(resultMaxWithReduce);
+
+        long resultMinWithReduce = peopleText.lines()
+//                .filter(dummyEmployeeSelector.negate())
+                .map(Employee::createEmployee)
+                .map(e -> (Employee) e)
+                .filter(noDummiesAndOverFiveK)
+                .collect(Collectors.toSet())
+                .stream()
+                .sorted(comparing(Employee::getLastName)
+                        .thenComparing(Employee::getFirstName)
+                        .thenComparing(Employee::getSalary))
+                .skip(5)
+                .mapToInt(StreamStuff::showEmpAndGetSalary)
+                .reduce((a, b) -> a < b ? a : b).orElse(-1);
+        System.out.println(resultMinWithReduce);
+
+        Optional<String> reduceStrings = Stream.of("tom", "jack", "sam")
                 .reduce((a, b) -> a.toUpperCase().concat("_").concat(b.toUpperCase()));
-        System.out.println(reduce.orElse(""));
+        System.out.println(reduceStrings.orElse(""));
 
+        Optional<String> reduceStrings2 = Stream.of("tom")
+                .reduce((a, b) -> a.toUpperCase().concat("_").concat(b.toUpperCase()));
+        System.out.println(reduceStrings2.orElse(""));
 
 //        Extra materials
 
